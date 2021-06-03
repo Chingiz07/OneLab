@@ -1,4 +1,4 @@
-package kz.one.lab.lab2
+package kz.one.lab.lecture2
 
 object Person1 {
 

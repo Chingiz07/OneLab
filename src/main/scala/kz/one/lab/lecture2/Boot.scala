@@ -1,7 +1,7 @@
-package kz.one.lab.lab2
+package kz.one.lab.lecture2
 
 import akka.actor.ActorSystem
-import kz.one.lab.lab2.actors.Actor1
+import kz.one.lab.lecture2.actors.Actor1
 
 object Boot extends App {
 
