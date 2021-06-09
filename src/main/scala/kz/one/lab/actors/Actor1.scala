@@ -1,7 +1,7 @@
-package kz.one.lab.lecture2.actors
+package kz.one.lab.actors
 
 import akka.actor.{Actor, ActorLogging, Props}
-import kz.one.lab.lecture2.actors.Actor1.Hello
+import Actor1.Hello
 
 object Actor1 {
 
