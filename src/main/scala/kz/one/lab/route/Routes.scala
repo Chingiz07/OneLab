@@ -1,6 +1,7 @@
 package kz.one.lab.route
 
 import akka.actor.{ActorSystem, Props}
+import akka.http.scaladsl.marshalling.Marshaller
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.BasicDirectives
@@ -14,6 +15,8 @@ trait Routes extends BasicDirectives with Json4sSupport {
   implicit val timeout: Timeout
 
   def handlerProps: Props
+
+  Marshaller[]
 
   val routes: Route =
     pathPrefix("ping") { //POST localhost:8080/ping/start

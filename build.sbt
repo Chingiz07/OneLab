@@ -13,6 +13,4 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"  %% "akka-http"       % akkaHttpVersion,
   "de.heikoseeberger"  %% "akka-http-json4s"% "1.20.1",
   "com.typesafe.akka"  %% "akka-stream"     % akkaVersion,
-
-  "kz.one.lab"         %% "onelab-domain"   % "1.0",
 )
