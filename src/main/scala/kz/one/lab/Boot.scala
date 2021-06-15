@@ -1,16 +1,29 @@
 package kz.one.lab
 
-import akka.actor.ActorSystem
-import kz.one.lab.actors.Actor1
+import akka.actor.{ActorSystem, Props}
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
+import akka.util.Timeout
+import com.typesafe.config.{Config, ConfigFactory}
+import kz.one.lab.actors.Handler
+import kz.one.lab.route.Routes
 
-object Boot extends App {
+import java.util.concurrent.TimeUnit
 
-  implicit val actorSystem: ActorSystem = ActorSystem("Lab2")
+object Boot extends App with Routes {
+  //For formating code: Ctrl + Alt + L
+  implicit val config: Config = ConfigFactory.load()
+  val systemName = config.getString("akka.system")
 
-  val actor1 = actorSystem.actorOf(Actor1.props)
-  val actor2 = actorSystem.actorOf(Actor1.props)
+  implicit val timeout: Timeout                = Timeout(60, TimeUnit.SECONDS)
+  implicit val actorSystem: ActorSystem        = ActorSystem(systemName)
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-  actor1 ! "Ping"
-  actor1 ! Actor1.Hello("Hello")
+  val host: String = config.getString("akka.http.host")
+  val port: Int = config.getInt("akka.http.port")
+
+  def handlerProps: Props = Handler.props()
+
+  Http().bindAndHandle(routes, host, port)
 
 }
