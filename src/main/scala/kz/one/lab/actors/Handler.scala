@@ -1,10 +1,11 @@
 package kz.one.lab.actors
 
 import akka.actor.{Actor, ActorLogging, Props}
+import kz.one.lab.domain.Book
 
 object Handler {
 
-  case class Start()
+  case class CreateBook(book: Book)
 
   def props(): Props = Props(new Handler())
 
@@ -12,10 +13,13 @@ object Handler {
 
 class Handler extends Actor with ActorLogging {
 
+  var books: Seq[Book] = Seq.empty[Book]
+
   def receive: Receive = {
-    case Handler.Start() =>
-      log.info("Started")
-      context.parent ! "Started"
+    case Handler.CreateBook(book) =>
+      books = books :+ book
+      log.info(s"$books")
+      context.parent ! book
   }
 
 }

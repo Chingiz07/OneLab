@@ -1,13 +1,16 @@
 package kz.one.lab.serializer
 
+import kz.one.lab.domain.Book
+import org.json4s.jackson.Serialization
 import org.json4s.{Formats, ShortTypeHints}
-import org.json4s.native.Serialization
 
-trait Serializer extends CoreSerializer with Serialization {
+trait Serializer extends Serialization {
 
   implicit val formats: Formats = Serialization.formats(
     ShortTypeHints(
-      hints
+      List(
+        classOf[Book],
+      )
     )
   )
 
