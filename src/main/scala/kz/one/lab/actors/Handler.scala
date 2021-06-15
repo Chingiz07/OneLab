@@ -7,18 +7,16 @@ object Handler {
 
   case class CreateBook(book: Book)
 
-  def props(): Props = Props(new Handler())
+  def props(books: Seq[Book]): Props = Props(new Handler(books))
 
 }
 
-class Handler extends Actor with ActorLogging {
-
-  var books: Seq[Book] = Seq.empty[Book]
+class Handler(books: Seq[Book]) extends Actor with ActorLogging {
 
   def receive: Receive = {
     case Handler.CreateBook(book) =>
-      books = books :+ book
-      log.info(s"$books")
+      val localBooks = books :+ book
+      log.info(s"$localBooks")
       context.parent ! book
   }
 

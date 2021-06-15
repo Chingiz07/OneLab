@@ -6,6 +6,7 @@ import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import kz.one.lab.actors.Handler
+import kz.one.lab.domain.Book
 import kz.one.lab.route.Routes
 
 import java.util.concurrent.TimeUnit
@@ -22,7 +23,12 @@ object Boot extends App with Routes {
   val host: String = config.getString("akka.http.host")
   val port: Int = config.getInt("akka.http.port")
 
-  def handlerProps: Props = Handler.props()
+  val books: Seq[Book] = Seq(
+    Book("1", "Chingiz", "Scala"),
+    Book("2", "Maksat", "Swift"),
+    Book("3", "Ameer", "Akka")
+  )
+  def handlerProps: Props = Handler.props(books)
 
   Http().bindAndHandle(routes, host, port)
 
