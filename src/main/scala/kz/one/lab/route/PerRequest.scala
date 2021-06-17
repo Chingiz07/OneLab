@@ -1,6 +1,7 @@
 package kz.one.lab.route
 
-import akka.actor.{ActorLogging, ActorRef, ActorSystem, Props, Actor => AkkaActor}
+import akka.actor.SupervisorStrategy.Stop
+import akka.actor.{ActorLogging, ActorRef, ActorSystem, OneForOneStrategy, Props, Actor => AkkaActor}
 import akka.http.scaladsl.marshalling.ToResponseMarshallable
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import akka.http.scaladsl.server.{RequestContext, RouteResult}
@@ -22,10 +23,10 @@ trait PerRequest extends AkkaActor with SerializerWithoutTypeHints with ActorLog
   target ! message
 
   def receive: Receive = {
-    case a: Book => complete(StatusCodes.OK, a)
+    case book: Book => complete(StatusCodes.OK, book)
   }
 
-  def complete(status: StatusCode, obj: => ToResponseMarshallable) = {
+  def complete(status: StatusCode, obj: => ToResponseMarshallable): Unit = {
 
     val f = status match {
       case StatusCodes.NoContent =>
@@ -40,6 +41,21 @@ trait PerRequest extends AkkaActor with SerializerWithoutTypeHints with ActorLog
 
     stop(self)
   }
+
+  override val supervisorStrategy: OneForOneStrategy =
+    OneForOneStrategy() {
+
+      /**
+       * Catching any other exceptions
+       */
+      case e => {
+
+        complete(StatusCodes.InternalServerError, e)
+
+        Stop
+
+      }
+    }
 
 }
 
